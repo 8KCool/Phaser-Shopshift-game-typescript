@@ -81,11 +81,13 @@ const config = {
     }),
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    port: 5000,
-    inline: true,
-    hot: true,
-    overlay: true,
+    static: {
+      directory: path.join(__dirname, "dist")
+    },
+
+    compress: true,
+    port: 5000, // default 8000
+
   },
 };
 module.exports = config;
