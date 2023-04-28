@@ -27,9 +27,8 @@ export class LoadingScene extends Scene {
             0xFFFFFF,
         );
 
-        const loadingText = this.add.text(halfWidth - 75, posY - 100, 'Loading...').setFontSize(24);
-        const percentText = this.add.text(halfWidth - 25, posY, '0%').setFontSize(24);
-        const assetText = this.add.text(halfWidth - 25, posY + 100, '').setFontSize(24);
+        const loadingText = this.add.text(halfWidth - 75, posY - 40, 'Loading...').setFontSize(24);
+        const percentText = this.add.text(halfWidth - 25, posY + 10, '0%').setFontSize(24);
 
         var percent = 0;
         this.load.on('progress', (value: any) => {
@@ -39,16 +38,11 @@ export class LoadingScene extends Scene {
             percentText.setText(`${percent}%`);
         });
 
-        this.load.on('fileprogress', (file: any) => {
-            assetText.setText(file.key);
-        });
-
         this.load.on('complete', () => {
             var intId = setInterval(function () {
                 if(percent == 100) {
                     loadingText.destroy();
                     percentText.destroy();
-                    assetText.destroy();
                     progressBar.destroy();
                     clearInterval(intId);
                 }
