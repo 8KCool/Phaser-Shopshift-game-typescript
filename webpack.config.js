@@ -3,7 +3,6 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const isProd = process.env.NODE_ENV === 'production';
 const babelOptions = {
   presets: [
@@ -79,14 +78,6 @@ const config = {
       filename: 'index.html',
       inlineSource: '.(js|css)$',
       minify: false,
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'assets',
-          to: 'assets',
-        },
-      ],
     }),
   ],
   devServer: {
