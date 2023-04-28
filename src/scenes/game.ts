@@ -3,34 +3,36 @@ import { getGameWidth, getGameHeight } from '../helper';
 
 export class GameScene extends Scene {
 
-    private wallBg!: Phaser.GameObjects.Image;
+    private gameTitle!: Phaser.GameObjects.Text;
 
     private signBg!: Phaser.GameObjects.Image;
     private signTitle!: Phaser.GameObjects.Text;
+
+    private shopBg!: Phaser.GameObjects.TileSprite;
+    private floorBg!: Phaser.GameObjects.TileSprite;
+
 
     constructor() {
         super('game-scene');
     }
 
     create(): void {
-
-        this.initGameBoard();
-
+        this.initBoard();
         this.prepareGame();
         this.testGame();
         this.startGame();
     }
 
-    private initGameBoard() {
+    private initBoard() {
+        this.gameTitle = this.add.text(getGameWidth(this)/2, getGameHeight(this)/2, "Instruction")
+            .setFontSize(40).setColor("#000000").setOrigin(.5, .5).setFontFamily("cursive").setFontStyle("bold");
         this.initInfoBoard();
-
+        this.initGameBoard();
     }
 
     private initInfoBoard() {
         // set info bg
-        this.wallBg = this.add.image(0, 0, "bg-wall").setOrigin(0, 0);
-        this.wallBg.displayWidth = this.sys.canvas.width;
-        this.wallBg.displayHeight = this.sys.canvas.height * 0.3;
+        const wallBg = this.add.tileSprite(0, 0, getGameWidth(this), getGameHeight(this) * 0.3, "bg-wall").setOrigin(0, 0);
 
         // set sign panel
         this.signBg = this.add.image(0, 0, "bg-sign").setOrigin(0, 0);
@@ -41,6 +43,14 @@ export class GameScene extends Scene {
         const signContainer = this.add.container(getGameWidth(this) / 2 - this.signBg.width / 2, 0);
         signContainer.add(this.signBg);
         signContainer.add(this.signTitle);
+    }
+
+    private initGameBoard() {
+        this.shopBg = this.add.tileSprite(0, 0, getGameWidth(this), 438, "bg-shelf").setOrigin(0, 0);
+        this.floorBg = this.add.tileSprite(0, 438, getGameWidth(this), 438, "bg-floor").setOrigin(0, 0);
+        const gameContainer = this.add.container(0, getGameHeight(this)*0.3);
+        gameContainer.add(this.shopBg);
+        gameContainer.add(this.floorBg);
     }
 
     private prepareGame() {
