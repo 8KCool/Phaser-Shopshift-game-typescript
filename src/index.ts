@@ -11,10 +11,11 @@ const gameConfig: Types.Core.GameConfig = {
     title: 'ShopShift',
     type: Phaser.WEBGL,
     parent: 'BrainGame',
-    backgroundColor: '#351f1b',
+    backgroundColor: '#000000',
     scale: {
-        mode: Phaser.Scale.ScaleModes.RESIZE,
+        mode: Phaser.Scale.ScaleModes.FIT,
         width: window.innerWidth,
+        height: window.innerHeight,
     },
     physics: {
         default: 'arcade',
@@ -40,15 +41,16 @@ const gameConfig: Types.Core.GameConfig = {
 };
 
 window.sizeChanged = () => {
-    if (window.game.isBooted) {
-        setTimeout(() => {
-            window.game.scale.resize(window.innerWidth, window.innerHeight);
-            window.game.canvas.setAttribute(
-                'style',
-                `display: block; width: ${window.innerWidth}px; height: ${window.innerHeight}px;`,
-            );
-        }, 100);
-    }
+    // if (window.game.isBooted) {
+        // setTimeout(() => {
+        //     console.log("sdf");
+        //     window.game.scale.resize(window.innerWidth, window.innerHeight);
+        //     window.game.canvas.setAttribute(
+        //         'style',
+        //         `display: block; width: ${window.innerWidth}px; height: ${window.innerHeight}px;`,
+        //     );
+        // }, 100);
+    // }
 };
 
 window.onresize = () => window.sizeChanged();
