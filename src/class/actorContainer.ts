@@ -1,6 +1,6 @@
 
 import { getGameWidth, getGameHeight } from '../helper';
-import {Actor_Sprite_Key, Game_Sprite_Key} from '../const'; 
+import {Actor_Sprite_Key, Game_Sprite_Key} from '../const';
 
 export class ActorContainer extends Phaser.GameObjects.Container {
 
