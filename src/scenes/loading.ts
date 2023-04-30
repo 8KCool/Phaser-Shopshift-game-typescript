@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from 'phaser';
 import { getGameWidth, getGameHeight } from '../helper';
+import {Actor_Sprite_Key, Game_Sprite_Key} from '../const';
 
 export class LoadingScene extends Scene {
 
@@ -65,11 +66,9 @@ export class LoadingScene extends Scene {
         this.load.image('bg-floor', 'sprites/bg-floor.png');
         this.load.image('bg-shelf', 'sprites/bg-shelf.png');
         this.load.image('bg-sign', 'sprites/bg-sign.png');
-        this.load.image('bread', 'sprites/bread.png');
-        this.load.image('hudCross', 'sprites/hudCross.png');
-        this.load.image('hudTick', 'sprites/hudTick.png');
         this.load.image('playPause', 'sprites/playPause.png');
-        this.load.image('background', 'sprites/shopshift.svg');
+        this.load.atlas(Actor_Sprite_Key, 'sprites/actor_anim.png', 'sprites/actor_anim.json');
+        this.load.atlas(Game_Sprite_Key, 'sprites/game_sprite.png', 'sprites/game_sprite.json');
 
     }
 }

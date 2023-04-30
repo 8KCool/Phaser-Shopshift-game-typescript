@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { getGameWidth, getGameHeight } from '../helper';
 import { InfoBoardContainer } from '../class/infoBoardContainer';
+import { ActorContainer } from '../class/actorContainer';
 
 export class GameScene extends Scene {
 
@@ -8,6 +9,7 @@ export class GameScene extends Scene {
     private shopBg!: Phaser.GameObjects.TileSprite;
     private floorBg!: Phaser.GameObjects.TileSprite;
     private signContainer!: InfoBoardContainer;
+    private actorContainer!: ActorContainer;
 
 
     constructor() {
@@ -16,6 +18,7 @@ export class GameScene extends Scene {
 
     create(): void {
         this.initBoard();
+        this.initActor();
         this.prepareGame();
         this.testGame();
         this.startGame();
@@ -39,6 +42,11 @@ export class GameScene extends Scene {
         const gameContainer = this.add.container(0, getGameHeight(this)*0.3);
         gameContainer.add(this.shopBg);
         gameContainer.add(this.floorBg);
+    }
+
+    private initActor() {
+        this.actorContainer = new ActorContainer(this, getGameWidth(this)/2, this.signContainer.height + 438);
+        // this.actorContainer.playAnimation("walk");
     }
 
     private prepareGame() {

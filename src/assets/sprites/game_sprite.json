@@ -1,0 +1,272 @@
+{
+	"textures": [
+		{
+			"image": "game_sprite.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 717,
+				"h": 248
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "bucket",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 218,
+						"h": 176
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 218,
+						"h": 176
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 218,
+						"h": 176
+					}
+				},
+				{
+					"filename": "noodle",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 140,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 140,
+						"h": 68
+					},
+					"frame": {
+						"x": 1,
+						"y": 179,
+						"w": 140,
+						"h": 68
+					}
+				},
+				{
+					"filename": "egg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 131,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 131,
+						"h": 60
+					},
+					"frame": {
+						"x": 143,
+						"y": 179,
+						"w": 131,
+						"h": 60
+					}
+				},
+				{
+					"filename": "b_hexagon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 120
+					},
+					"frame": {
+						"x": 221,
+						"y": 1,
+						"w": 120,
+						"h": 120
+					}
+				},
+				{
+					"filename": "bread",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 125,
+						"h": 53
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 125,
+						"h": 53
+					},
+					"frame": {
+						"x": 221,
+						"y": 123,
+						"w": 125,
+						"h": 53
+					}
+				},
+				{
+					"filename": "circle",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 120
+					},
+					"frame": {
+						"x": 343,
+						"y": 1,
+						"w": 120,
+						"h": 120
+					}
+				},
+				{
+					"filename": "rectangle",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 120
+					},
+					"frame": {
+						"x": 348,
+						"y": 123,
+						"w": 120,
+						"h": 120
+					}
+				},
+				{
+					"filename": "pentagon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 123,
+						"h": 116
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 123,
+						"h": 116
+					},
+					"frame": {
+						"x": 465,
+						"y": 1,
+						"w": 123,
+						"h": 116
+					}
+				},
+				{
+					"filename": "hexagon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 107,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 107,
+						"h": 120
+					},
+					"frame": {
+						"x": 590,
+						"y": 1,
+						"w": 107,
+						"h": 120
+					}
+				},
+				{
+					"filename": "banana",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 94,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 94,
+						"h": 96
+					},
+					"frame": {
+						"x": 470,
+						"y": 119,
+						"w": 94,
+						"h": 96
+					}
+				},
+				{
+					"filename": "orange",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 104,
+						"h": 111
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 24,
+						"w": 96,
+						"h": 87
+					},
+					"frame": {
+						"x": 566,
+						"y": 123,
+						"w": 96,
+						"h": 87
+					}
+				},
+				{
+					"filename": "juice",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 52,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 52,
+						"h": 120
+					},
+					"frame": {
+						"x": 664,
+						"y": 123,
+						"w": 52,
+						"h": 120
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:9b4fe7b7a2195d90996c52cc27cc86a8:0b8eeac908a1ac82ef961bc8719f9716:77a8da5689711a41e2cb17031a4a5e9d$"
+	}
+}
