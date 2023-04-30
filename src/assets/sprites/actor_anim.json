@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "walk1",
+					"filename": "pause.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "walk2",
+					"filename": "walk_1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "walk3",
+					"filename": "walk_2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -73,7 +73,7 @@
 					}
 				},
 				{
-					"filename": "walk4",
+					"filename": "walk_3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -94,7 +94,7 @@
 					}
 				},
 				{
-					"filename": "walk5",
+					"filename": "walk_4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -115,7 +115,7 @@
 					}
 				},
 				{
-					"filename": "walk6",
+					"filename": "walk_5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -136,7 +136,7 @@
 					}
 				},
 				{
-					"filename": "walk7",
+					"filename": "walk_6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -157,7 +157,7 @@
 					}
 				},
 				{
-					"filename": "walk8",
+					"filename": "walk_7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -178,7 +178,7 @@
 					}
 				},
 				{
-					"filename": "walk9",
+					"filename": "walk_8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -199,7 +199,7 @@
 					}
 				},
 				{
-					"filename": "walk10",
+					"filename": "walk_9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -225,6 +225,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:da326923dfbee8721d791de52fb17064:27097e88f2cd4707146b3947b299f7bc:50f0c4d8276da192bcc61efc516181f7$"
+		"smartupdate": "$TexturePacker:SmartUpdate:67abade1eb3e258f495f5ba4d9d1cb43:5b124a36e1a90ac7d375abd078fa5496:50f0c4d8276da192bcc61efc516181f7$"
 	}
 }

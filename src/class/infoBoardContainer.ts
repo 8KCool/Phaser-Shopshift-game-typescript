@@ -1,10 +1,12 @@
 
+import { sign } from 'crypto';
 import { getGameWidth, getGameHeight } from '../helper';
 
 export class InfoBoardContainer extends Phaser.GameObjects.Container {
 
     private signTitle!: Phaser.GameObjects.Text;
     private scoreValue!: Phaser.GameObjects.Text;
+    private wallBg!: Phaser.GameObjects.TileSprite;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene);
@@ -19,7 +21,7 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
 
     private initBoardContainer() {
         // set info bg
-        const wallBg = this.scene.add.tileSprite(0, 0, getGameWidth(this.scene), getGameHeight(this.scene) * 0.3, "bg-wall").setOrigin(0, 0);
+        this.wallBg = this.scene.add.tileSprite(0, 0, getGameWidth(this.scene), getGameHeight(this.scene) * 0.25, "bg-wall").setOrigin(0, 0);
 
         this.initSignPanel();
         this.initScorePanel();
@@ -29,7 +31,8 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
     private initSignPanel() {
         const signBg = this.scene.add.image(0, 0, "bg-sign").setOrigin(.5, 0);
         signBg.setPosition(getGameWidth(this.scene) / 2, 0);
-        this.signTitle = this.scene.add.text(getGameWidth(this.scene) / 2 - 100, 120, "Goal: Buy products that are on sale.")
+        signBg.setDisplaySize(signBg.width , getGameHeight(this.scene) * 0.225)
+        this.signTitle = this.scene.add.text(getGameWidth(this.scene) / 2 - 100, this.wallBg.height *0.3, "Goal: Buy products that are on sale.")
             .setFontSize(30).setColor("#FFFFFF").setOrigin(.5, 0).setFontFamily("cursive");
         this.signTitle.setWordWrapWidth(420);
         this.add(signBg);
@@ -60,4 +63,7 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
         this.scoreValue.setText(value.toString());
     }
 
+    public getHeight() {
+        return this.wallBg.height;
+    }
 }
