@@ -322,7 +322,8 @@ export class GameScene extends Scene {
             }
         }
         else if(this.mCurrentGameState == GameStateArray.PlayingGame){
-            // this.mGameScore += this.actorContainer.getActorSpeed()
+            this.mGameScore += (this.actorContainer.getActorSpeed() - 1) / 0.2 * 2 + 6;
+            this.signContainer.setScoreValue(this.mGameScore);
             this.actorContainer.increaseActorSpeed();
         }
     }
