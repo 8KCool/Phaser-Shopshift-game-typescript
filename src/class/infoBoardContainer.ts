@@ -34,14 +34,14 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
     private initSignPanel() {
         const signBg = this.scene.add.image(0, 0, "bg-sign").setOrigin(.5, 0);
         signBg.setPosition(getGameWidth(this.scene) / 2, 0);
-        signBg.setDisplaySize(signBg.width , getGameHeight(this.scene) * 0.225)
-        this.signTitle = this.scene.add.text(getGameWidth(this.scene) / 2 - 100, this.wallBg.height *0.25, "")
-            .setFontSize(30).setColor("#FFFFFF").setOrigin(.5, 0).setFontFamily("cursive");
+        signBg.setDisplaySize(getGameWidth(this.scene) * 0.42 , getGameHeight(this.scene) * 0.225)
+        this.signTitle = this.scene.add.text(getGameWidth(this.scene) * 0.44, this.wallBg.height *0.5, "")
+            .setFontSize(30).setColor("#FFFFFF").setOrigin(.5, .5).setFontFamily("cursive");
         this.signTitle.setWordWrapWidth(420);
 
         
-        this.signImage = this.scene.add.sprite(getGameWidth(this.scene) * 0.65, this.wallBg.height *0.2, Game_Sprite_Key, "orange")
-            .setOrigin(.5, 0).setVisible(false);
+        this.signImage = this.scene.add.sprite(getGameWidth(this.scene) * 0.65, this.wallBg.height *0.5, Game_Sprite_Key, "orange")
+            .setOrigin(.5, .5).setVisible(false);
         this.add(signBg);
         this.add(this.signTitle);
         this.add(this.signImage);
