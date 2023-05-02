@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { getGameWidth, getGameHeight } from '../helper';
+import { getGameWidth, getGameHeight, getRandomInt, getGoodFrameName } from '../helper';
 import { InfoBoardContainer } from '../class/infoBoardContainer';
 import { ActorContainer } from '../class/actorContainer';
 import { Actor_Sprite_Key, Game_Sprite_Key, TestGameString, GameStateArray, TestGameValue, MatchValue } from '../const';
@@ -13,13 +13,27 @@ export class GameScene extends Scene {
     private signContainer!: InfoBoardContainer;
     private actorContainer!: ActorContainer;
 
+    private goodSprite!: Phaser.GameObjects.Sprite;
+    private typeSprite!: Phaser.GameObjects.Sprite;
+    private mGoodContainer!: Phaser.GameObjects.Container;
+    private goodAnimTween!: Phaser.Tweens.Tween;
+
 
     // button
     private continueButton!: Phaser.GameObjects.Text;
+    private buyButton!: Phaser.GameObjects.Text;
+    private notbuyButton!: Phaser.GameObjects.Text;
 
     // game logic
     private mCurrentGameState = GameStateArray.Loading;
     private mTestGamePoint = 0;
+    private mTestGameScore = 0;
+    private mCurrentGameValue!: number;
+    private mCurrentGoodNumber!: number;
+    private mCurrentTypeNumber!: number;
+
+    private GoodsInterval!: any;
+    private BackInterval!: any;
 
     constructor() {
         super('game-scene');
@@ -34,7 +48,7 @@ export class GameScene extends Scene {
     }
 
     update(): void {
-        this.startBgAnimation();
+        // this.startBgAnimation();
     }
 
     private initGameAnimate() {
@@ -61,9 +75,17 @@ export class GameScene extends Scene {
         this.shopBg = this.add.tileSprite(0, 0, getGameWidth(this), 438, "bg-shelf").setOrigin(0, 0);
         this.shopBg.scaleY = (getGameHeight(this) * 0.5 / 438);
         this.floorBg = this.add.tileSprite(0, getGameHeight(this) * 0.5, getGameWidth(this), getGameHeight(this) * 0.25, "bg-floor").setOrigin(0, 0);
+
         const gameContainer = this.add.container(0, getGameHeight(this) * 0.25);
         gameContainer.add(this.shopBg);
         gameContainer.add(this.floorBg);
+
+        this.typeSprite = this.add.sprite(0, 5, Game_Sprite_Key, "circle");
+        this.goodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "orange").setScale(0.7);
+
+        this.mGoodContainer = this.add.container(getGameWidth(this) * 1.1, getGameHeight(this) / 2);
+        this.mGoodContainer.add(this.typeSprite);
+        this.mGoodContainer.add(this.goodSprite);
 
         this.continueButton = this.add.text(getGameWidth(this) / 2, getGameHeight(this) * 0.9, 'Continue')
             .setOrigin(0.5)
@@ -75,6 +97,36 @@ export class GameScene extends Scene {
             .on('pointerdown', this.testGame, this)
             .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
             .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+
+
+        this.notbuyButton = this.add.text(getGameWidth(this) * 0.4, getGameHeight(this) * 0.9, "Don't Buy")
+            .setOrigin(0.5)
+            .setPadding(40, 20, 40, 20)
+            .setFontSize(36)
+            .setStyle({ backgroundColor: '#d54040' })
+            .setInteractive({ useHandCursor: true })
+            .setVisible(false)
+            .on('pointerdown', this.checkGameValueFalse, this)
+            .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
+            .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+
+
+        this.buyButton = this.add.text(getGameWidth(this) * 0.6, getGameHeight(this) * 0.9, 'Buy')
+            .setOrigin(0.5)
+            .setPadding(40, 20, 40, 20)
+            .setFontSize(36)
+            .setStyle({ backgroundColor: '#43b749' })
+            .setInteractive({ useHandCursor: true })
+            .setVisible(false)
+            .on('pointerdown', this.checkGameValueTrue, this)
+            .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
+            .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+    }
+
+    private showBtnPlayGroup(flag: boolean) {
+        this.continueButton.setVisible(!flag);
+        this.notbuyButton.setVisible(flag);
+        this.buyButton.setVisible(flag);
     }
 
     private initActor() {
@@ -82,10 +134,12 @@ export class GameScene extends Scene {
     }
 
     private startBgAnimation() {
-        if(this.mCurrentGameState == GameStateArray.PlayTest) {
-            this.shopBg.tilePositionX += 4 * (this.actorContainer.getActorState() + 1); 
-            this.floorBg.tilePositionX += 4 * (this.actorContainer.getActorState() + 1); 
-        }
+        this.BackInterval = setInterval(() => {
+            if (this.mCurrentGameState == GameStateArray.PlayTest) {
+                this.shopBg.tilePositionX += 4 * (this.actorContainer.getActorState() + 1);
+                this.floorBg.tilePositionX += 4 * (this.actorContainer.getActorState() + 1);
+            }
+        }, 10)
     }
 
     private setSignText(title: string) {
@@ -133,7 +187,7 @@ export class GameScene extends Scene {
             this.setSignImage(TestGameValue[this.mTestGamePoint]);
             this.mTestGamePoint++;
         }
-        else if(this.mTestGamePoint == TestGameString.length && this.mCurrentGameState == GameStateArray.Inittest) {
+        else if (this.mTestGamePoint == TestGameString.length && this.mCurrentGameState == GameStateArray.Inittest) {
             this.mCurrentGameState = GameStateArray.PlayTest;
             this.startTestGame();
         }
@@ -141,20 +195,101 @@ export class GameScene extends Scene {
 
     private startTestGame() {
         this.startBgAnimation();
+        this.showBtnPlayGroup(true);
         this.actorContainer.playAnimation("walk");
 
         this.makeOnePlay();
-        
+
     }
 
     private startGame() {
 
     }
 
-/**
- * 
-*/
+    /**
+     * the single game logic
+    */
     private makeOnePlay() {
+        this.mCurrentGameValue = getRandomInt(11);   // sign number
+        this.mCurrentGoodNumber = getRandomInt(6);   // good number (orange...)
+        this.mCurrentTypeNumber = getRandomInt(5) + 6;   // good type number  (circle ...)
+        this.setSignImage(this.mCurrentGameValue);
+        this.makeGoodAnimation(this.mCurrentGoodNumber, this.mCurrentTypeNumber);
+    }
 
+    private makeGoodAnimation(goodNumber: number, typeNumber: number) {
+        this.goodSprite.setFrame(getGoodFrameName(goodNumber));
+        this.typeSprite.setFrame(getGoodFrameName(typeNumber));
+        this.GoodsInterval = setInterval(() => {
+            this.mGoodContainer.setX(this.mGoodContainer.x - (4 * (this.actorContainer.getActorState() + 1)));
+            if (this.mGoodContainer.x <= getGameWidth(this) * 0.1) {
+                // this.mGoodContainer.setX(getGameWidth(this)*1.1);
+                // if(this.mCurrentGameState == GameStateArray.PlayTest) {
+                //     this.mCurrentGameState = GameStateArray.Inittest;
+                //     // this.stopPlayingGame();
+                //     // this.showBtnPlayGroup(false);
+                //     this.setWrongResult();
+                // }
+                this.setWrongResult();
+            }
+        }, 10)
+    }
+
+    private stopPlayingGame() {
+        clearInterval(this.GoodsInterval);
+        clearInterval(this.BackInterval);
+        this.actorContainer.stopAnimation();
+    }
+
+    private checkGameValueTrue() {
+        var result = this.checkCurrentState();
+        if (result == true) {
+            // okay
+            alert("okay");
+        }
+        else {
+            // false
+            // alert("false")
+            this.setWrongResult();
+        }
+    }
+
+    private checkGameValueFalse() {
+        var result = this.checkCurrentState();
+        if (result == true) {
+            // false
+            // alert("false")
+            this.setWrongResult();
+        }
+        else {
+            // true
+            alert("okay")
+        }
+    }
+
+    private checkCurrentState() {
+        if (this.mCurrentGameValue == this.mCurrentGoodNumber || this.mCurrentGameValue == this.mCurrentTypeNumber)
+            return true;
+        return false;
+    }
+
+    private setWrongResult() {
+        this.mGoodContainer.setX(getGameWidth(this) * 1.1);
+        if (this.mCurrentGameState == GameStateArray.PlayTest) {
+            this.mCurrentGameState = GameStateArray.Inittest;
+            this.stopPlayingGame();
+            this.showBtnPlayGroup(false);
+            this.mTestGameScore = 0;
+        }
+    }
+    private setTrueResult() {
+        this.mGoodContainer.setX(getGameWidth(this) * 1.1);
+        if (this.mCurrentGameState == GameStateArray.PlayTest) {
+            this.mTestGameScore ++;
+            if(this.mTestGameScore == 5) {
+                this.mCurrentGameState = GameStateArray.FinishTest;
+                this.finishTest();
+            }
+        }
     }
 }

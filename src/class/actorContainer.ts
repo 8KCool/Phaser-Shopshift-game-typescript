@@ -40,6 +40,7 @@ export class ActorContainer extends Phaser.GameObjects.Container {
 
     public stopAnimation() {
         this.actorSprite.stop();
+        this.actorSprite.setFrame("pause");
     }
 
     public getActorState() {

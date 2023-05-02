@@ -2,7 +2,7 @@ export const Actor_Sprite_Key = "animActor";
 export const Game_Sprite_Key = "gameSprite";
 
 export enum MatchValue {
-    Banana, Egg, Bread, Juice, Orange, Pie, Sqare, Circle, Pentagon, Hexagon, BHexagon
+    Banana, Egg, Bread, Juice, Orange, Pie, Sqare, Circle, Pentagon, Hexagon, BHexagon   /// 11
 }
     
 export const TestGameString = [
