@@ -102,7 +102,7 @@ export class GameScene extends Scene {
         gameContainer.add(this.floorBg);
 
         this.typeSprite = this.add.sprite(0, 5, Game_Sprite_Key, "circle").setScale(1.4);
-        this.goodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "orange");
+        this.goodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "orange").setScale(0.9);
 
         this.mGoodContainer = this.add.container(getGameWidth(this) * 1.1, getGameHeight(this) / 2);
         this.mGoodContainer.add(this.typeSprite);
