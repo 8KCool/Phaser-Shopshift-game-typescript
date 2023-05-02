@@ -66,13 +66,13 @@ export class GameScene extends Scene {
         });
         this.anims.create({ key: "run", frames: runAnim, frameRate: 10, repeat: -1 });
 
-        
+
         var runAnim = this.anims.generateFrameNames(Actor_Sprite_Key, {
             start: 1, end: 6,
             prefix: 'ride_', suffix: '.png'
         });
         this.anims.create({ key: "ride", frames: runAnim, frameRate: 10, repeat: -1 });
-        
+
         var runAnim = this.anims.generateFrameNames(Actor_Sprite_Key, {
             start: 1, end: 4,
             prefix: 'fly_', suffix: '.png'
@@ -176,9 +176,9 @@ export class GameScene extends Scene {
     private startBgAnimation() {
         clearInterval(this.BackInterval);
         this.BackInterval = setInterval(() => {
-            if (this.mCurrentGameState == GameStateArray.PlayTest 
+            if (this.mCurrentGameState == GameStateArray.PlayTest
                 || this.mCurrentGameState == GameStateArray.FinishTest
-                || this.mCurrentGameState == GameStateArray.PlayingGame ) {
+                || this.mCurrentGameState == GameStateArray.PlayingGame) {
                 this.shopBg.tilePositionX += 2 * this.actorContainer.getActorSpeed();
                 this.floorBg.tilePositionX += 2 * this.actorContainer.getActorSpeed();
                 console.log(this.actorContainer.getActorSpeed());
@@ -243,6 +243,7 @@ export class GameScene extends Scene {
     private startTestGame() {
         this.startBgAnimation();
         this.showBtnPlayGroup(true);
+        this.setSignText("Try it now.");
         this.actorContainer.playAnimation("walk");
 
         this.initNewGood();
@@ -302,15 +303,25 @@ export class GameScene extends Scene {
 
     private setWrongResult() {
         this.initNewGood();
-        if (this.mCurrentGameState == GameStateArray.PlayTest) {
+        if (this.mCurrentGameState == GameStateArray.PlayTest) {  // false
             this.mCurrentGameState = GameStateArray.Inittest;
             this.stopPlayingGame();
             this.showBtnPlayGroup(false);
             this.mTestGameScore = 0;
+            // show the sign result
+            var str = "";
+            if (this.mCurrentGameValue <= MatchValue.Pie) {
+                str = "The " + getGoodFrameName(this.mCurrentGameValue) + " are currently not on sale, you should not have bought them.";
+            } else {
+                str = getGoodFrameName(this.mCurrentGameValue) + " packaging is currently on sale, you should have bought the product.";
+            }
+            this.setSignText(str);
         }
-        else if(this.mCurrentGameState == GameStateArray.PlayingGame){
-            
+        else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
+            this.setSignText("DISCOUNT");
         }
+
+
     }
     private setTrueResult() {
         this.initNewGood();
@@ -320,8 +331,11 @@ export class GameScene extends Scene {
                 this.mCurrentGameState = GameStateArray.FinishTest;
                 this.finishTest();
             }
+
+            // show the sign result
+            this.setSignText("Well done!");
         }
-        else if(this.mCurrentGameState == GameStateArray.PlayingGame){
+        else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
             this.mGameScore += (this.actorContainer.getActorSpeed() - 1) / 0.2 * 2 + 6;
             this.signContainer.setScoreValue(this.mGameScore);
             this.actorContainer.increaseActorSpeed();
@@ -338,11 +352,13 @@ export class GameScene extends Scene {
     }
 
     private finishTest() {
+        this.setSignText("Shopshift improves: flexibility, task switching and concentration.");
         clearInterval(this.GoodsInterval);
         this.showStartButton();
     }
 
     private startRealGame() {
+        this.setSignText("Have fun!");
         this.mCurrentGameState = GameStateArray.PlayingGame;
         this.startBgAnimation();
         this.showBtnPlayGroup(true);
