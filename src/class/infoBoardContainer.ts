@@ -1,10 +1,13 @@
 
 import { sign } from 'crypto';
 import { getGameWidth, getGameHeight } from '../helper';
+import { MatchValue, Game_Sprite_Key } from '../const';
+
 
 export class InfoBoardContainer extends Phaser.GameObjects.Container {
 
     private signTitle!: Phaser.GameObjects.Text;
+    private signImage!: Phaser.GameObjects.Sprite;
     private scoreValue!: Phaser.GameObjects.Text;
     private wallBg!: Phaser.GameObjects.TileSprite;
 
@@ -32,11 +35,16 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
         const signBg = this.scene.add.image(0, 0, "bg-sign").setOrigin(.5, 0);
         signBg.setPosition(getGameWidth(this.scene) / 2, 0);
         signBg.setDisplaySize(signBg.width , getGameHeight(this.scene) * 0.225)
-        this.signTitle = this.scene.add.text(getGameWidth(this.scene) / 2 - 100, this.wallBg.height *0.3, "Goal: Buy products that are on sale.")
+        this.signTitle = this.scene.add.text(getGameWidth(this.scene) / 2 - 100, this.wallBg.height *0.25, "")
             .setFontSize(30).setColor("#FFFFFF").setOrigin(.5, 0).setFontFamily("cursive");
         this.signTitle.setWordWrapWidth(420);
+
+        
+        this.signImage = this.scene.add.sprite(getGameWidth(this.scene) * 0.65, this.wallBg.height *0.2, Game_Sprite_Key, "orange")
+            .setOrigin(.5, 0).setVisible(false);
         this.add(signBg);
         this.add(this.signTitle);
+        this.add(this.signImage);
     }
 
     private initScorePanel() {
@@ -57,6 +65,26 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
     // change the text of the sign panel
     public setSignTitle(text: string) {
         this.signTitle.setText(text);
+    }
+
+    public setSignImage(index: number) {
+        // "Banana", "Egg", "Bread", "Juice", "Orange", "Pie", "Sqare", "Circle", "Pentagon", "Hexagon", "BHexagon"
+        let signTextture = "";
+        switch(index) {
+            case MatchValue.Banana: signTextture = "banana"; break;
+            case MatchValue.Egg: signTextture = "egg"; break;
+            case MatchValue.Bread: signTextture = "bread"; break;
+            case MatchValue.Juice: signTextture = "juice"; break;
+            case MatchValue.Orange: signTextture = "orange"; break;
+            case MatchValue.Pie: signTextture = "noodle"; break;
+            case MatchValue.Sqare: signTextture = "rectangle"; break;
+            case MatchValue.Circle: signTextture = "circle"; break;
+            case MatchValue.Pentagon: signTextture = "pentagon"; break;
+            case MatchValue.Hexagon: signTextture = "hexagon"; break;
+            case MatchValue.BHexagon: signTextture = "b_hexagon"; break;
+        }
+        this.signImage.setFrame(signTextture);
+        this.signImage.setVisible(true);
     }
 
     public setScoreValue(value: number) {

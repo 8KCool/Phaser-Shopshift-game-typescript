@@ -1,12 +1,12 @@
 
 import { getGameWidth, getGameHeight } from '../helper';
-import {Actor_Sprite_Key, Game_Sprite_Key} from '../const';
+import {Actor_Sprite_Key, Game_Sprite_Key, ActorState} from '../const';
 
 export class ActorContainer extends Phaser.GameObjects.Container {
 
     private actorSprite!: Phaser.GameObjects.Sprite;
     private bucketSprite!: Phaser.GameObjects.Image;
-    private actorState!: number;
+    private actorState = ActorState.WALK;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene);
@@ -26,6 +26,8 @@ export class ActorContainer extends Phaser.GameObjects.Container {
 
         this.actorSprite.setX(-this.actorSprite.width/2.35);
         this.bucketSprite.setX(this.bucketSprite.width/2.35);
+
+        this.actorState = ActorState.WALK;
     }
 
     public setActorFrame(frame: string) {
@@ -38,5 +40,9 @@ export class ActorContainer extends Phaser.GameObjects.Container {
 
     public stopAnimation() {
         this.actorSprite.stop();
+    }
+
+    public getActorState() {
+        return this.actorState;
     }
 }
