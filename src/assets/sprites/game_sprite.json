@@ -4,11 +4,53 @@
 			"image": "game_sprite.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 717,
-				"h": 248
+				"w": 913,
+				"h": 606
 			},
 			"scale": 1,
 			"frames": [
+				{
+					"filename": "playPause",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 512,
+						"h": 512
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 512,
+						"h": 512
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 512,
+						"h": 512
+					}
+				},
+				{
+					"filename": "hudTick",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 275,
+						"h": 220
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 275,
+						"h": 220
+					},
+					"frame": {
+						"x": 515,
+						"y": 1,
+						"w": 275,
+						"h": 220
+					}
+				},
 				{
 					"filename": "bucket",
 					"rotated": false,
@@ -24,10 +66,73 @@
 						"h": 176
 					},
 					"frame": {
-						"x": 1,
-						"y": 1,
+						"x": 515,
+						"y": 223,
 						"w": 218,
 						"h": 176
+					}
+				},
+				{
+					"filename": "hudCross",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 182,
+						"h": 182
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 182,
+						"h": 182
+					},
+					"frame": {
+						"x": 515,
+						"y": 401,
+						"w": 182,
+						"h": 182
+					}
+				},
+				{
+					"filename": "b_hexagon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 120
+					},
+					"frame": {
+						"x": 792,
+						"y": 1,
+						"w": 120,
+						"h": 120
+					}
+				},
+				{
+					"filename": "circle",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 120
+					},
+					"frame": {
+						"x": 792,
+						"y": 123,
+						"w": 120,
+						"h": 120
 					}
 				},
 				{
@@ -46,7 +151,7 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 179,
+						"y": 515,
 						"w": 140,
 						"h": 68
 					}
@@ -67,13 +172,13 @@
 					},
 					"frame": {
 						"x": 143,
-						"y": 179,
+						"y": 515,
 						"w": 131,
 						"h": 60
 					}
 				},
 				{
-					"filename": "b_hexagon",
+					"filename": "rectangle",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -87,8 +192,8 @@
 						"h": 120
 					},
 					"frame": {
-						"x": 221,
-						"y": 1,
+						"x": 735,
+						"y": 245,
 						"w": 120,
 						"h": 120
 					}
@@ -108,51 +213,30 @@
 						"h": 53
 					},
 					"frame": {
-						"x": 221,
-						"y": 123,
+						"x": 276,
+						"y": 515,
 						"w": 125,
 						"h": 53
 					}
 				},
 				{
-					"filename": "circle",
+					"filename": "juice",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 120,
+						"w": 52,
 						"h": 120
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 120,
+						"w": 52,
 						"h": 120
 					},
 					"frame": {
-						"x": 343,
-						"y": 1,
-						"w": 120,
-						"h": 120
-					}
-				},
-				{
-					"filename": "rectangle",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 120,
-						"h": 120
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 120,
-						"h": 120
-					},
-					"frame": {
-						"x": 348,
-						"y": 123,
-						"w": 120,
+						"x": 857,
+						"y": 245,
+						"w": 52,
 						"h": 120
 					}
 				},
@@ -171,8 +255,8 @@
 						"h": 116
 					},
 					"frame": {
-						"x": 465,
-						"y": 1,
+						"x": 735,
+						"y": 367,
 						"w": 123,
 						"h": 116
 					}
@@ -192,31 +276,10 @@
 						"h": 120
 					},
 					"frame": {
-						"x": 590,
-						"y": 1,
+						"x": 699,
+						"y": 485,
 						"w": 107,
 						"h": 120
-					}
-				},
-				{
-					"filename": "banana",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 94,
-						"h": 96
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 94,
-						"h": 96
-					},
-					"frame": {
-						"x": 470,
-						"y": 119,
-						"w": 94,
-						"h": 96
 					}
 				},
 				{
@@ -234,31 +297,31 @@
 						"h": 87
 					},
 					"frame": {
-						"x": 566,
-						"y": 123,
+						"x": 403,
+						"y": 515,
 						"w": 96,
 						"h": 87
 					}
 				},
 				{
-					"filename": "juice",
+					"filename": "banana",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 52,
-						"h": 120
+						"w": 94,
+						"h": 96
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 52,
-						"h": 120
+						"w": 94,
+						"h": 96
 					},
 					"frame": {
-						"x": 664,
-						"y": 123,
-						"w": 52,
-						"h": 120
+						"x": 808,
+						"y": 485,
+						"w": 94,
+						"h": 96
 					}
 				}
 			]
@@ -267,6 +330,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:9b4fe7b7a2195d90996c52cc27cc86a8:0b8eeac908a1ac82ef961bc8719f9716:77a8da5689711a41e2cb17031a4a5e9d$"
+		"smartupdate": "$TexturePacker:SmartUpdate:de4c75069155b578c2f7c2de33408089:d6796049fee125e7550961d72a35b7ba:77a8da5689711a41e2cb17031a4a5e9d$"
 	}
 }

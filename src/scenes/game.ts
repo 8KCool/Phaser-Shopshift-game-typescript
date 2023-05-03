@@ -15,7 +15,9 @@ export class GameScene extends Scene {
 
     private goodSprite!: Phaser.GameObjects.Sprite;
     private typeSprite!: Phaser.GameObjects.Sprite;
+    private resultGoodSprite!: Phaser.GameObjects.Sprite;
     private mGoodContainer!: Phaser.GameObjects.Container;
+
     private goodAnimTween!: Phaser.Tweens.Tween;
 
 
@@ -30,9 +32,11 @@ export class GameScene extends Scene {
     private mTestGamePoint = 0;
     private mTestGameScore = 0;
     private mGameScore = 0;
+    private mTotalHitCount = 0;
     private mCurrentGameValue!: number;
     private mCurrentGoodNumber!: number;
     private mCurrentTypeNumber!: number;
+    private mGoodCheckState = false;
 
     private GoodsInterval!: any;
     private BackInterval!: any;
@@ -42,6 +46,7 @@ export class GameScene extends Scene {
     }
 
     create(): void {
+        this.initAudio();
         this.initGameAnimate();
         this.initBoard();
         this.initActor();
@@ -51,6 +56,13 @@ export class GameScene extends Scene {
 
     update(): void {
         // this.startBgAnimation();
+    }
+
+    private initAudio() {
+        this.sound.add("bell");
+        this.sound.add("positive");
+        this.sound.add("sndSuccess");
+        this.sound.add("sndWrong");
     }
 
     private initGameAnimate() {
@@ -103,10 +115,13 @@ export class GameScene extends Scene {
 
         this.typeSprite = this.add.sprite(0, 5, Game_Sprite_Key, "circle").setScale(1.4);
         this.goodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "orange").setScale(0.9);
+        this.resultGoodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "hudTick").setVisible(false).setScale(0.5);
 
         this.mGoodContainer = this.add.container(getGameWidth(this) * 1.1, getGameHeight(this) / 2);
         this.mGoodContainer.add(this.typeSprite);
         this.mGoodContainer.add(this.goodSprite);
+        this.mGoodContainer.add(this.resultGoodSprite);
+
 
         this.continueButton = this.add.text(getGameWidth(this) / 2, getGameHeight(this) * 0.9, 'Continue')
             .setOrigin(0.5)
@@ -169,6 +184,13 @@ export class GameScene extends Scene {
         this.startButton.setVisible(true);
     }
 
+    private hideAllButton() {
+        this.continueButton.setVisible(false);
+        this.notbuyButton.setVisible(false);
+        this.buyButton.setVisible(false);
+        this.startButton.setVisible(false);
+    }
+
     private initActor() {
         this.actorContainer = new ActorContainer(this, 0, getGameHeight(this) * 0.8);
     }
@@ -223,12 +245,41 @@ export class GameScene extends Scene {
         this.mTestGamePoint = 0;
     }
 
+    private prepareStartGame() {
+        // first animation to start
+        this.hideAllButton();
+        this.actorContainer.playAnimation("walk");
+        this.actorContainer.setX(0);
+
+        const prepareTween = this.tweens.add({
+            targets: this.actorContainer,
+            x: getGameWidth(this) / 2,
+            duration: 1500,
+            ease: 'Linear'
+        });
+        prepareTween.on("complete", () => {
+            this.showStartButton();
+        }, this);
+
+        // game title animation
+        this.tweens.add({
+            targets: this.gameTitle,
+            x: this.gameTitle.width / 1.5,
+            y: this.gameTitle.height,
+            duration: 1500,
+            ease: 'Linear'
+        });
+
+    }
+
     private testGame() {
         if (this.mTestGamePoint < TestGameString.length && (this.mCurrentGameState == GameStateArray.FinishLoading || this.mCurrentGameState == GameStateArray.Inittest)) {
             this.mCurrentGameState = GameStateArray.Inittest;
             let signStr = TestGameString[this.mTestGamePoint];
             this.setSignText(signStr);
             this.setSignImage(TestGameValue[this.mTestGamePoint]);
+            this.sound.stopAll();
+            this.sound.play('bell');
             this.mTestGamePoint++;
         }
         else if (this.mTestGamePoint == TestGameString.length && this.mCurrentGameState == GameStateArray.Inittest) {
@@ -259,7 +310,7 @@ export class GameScene extends Scene {
         clearInterval(this.GoodsInterval)
         this.GoodsInterval = setInterval(() => {
             this.mGoodContainer.setX(this.mGoodContainer.x - 2 * this.actorContainer.getActorSpeed());
-            if (this.mGoodContainer.x <= getGameWidth(this) * 0.1) {
+            if (this.mGoodContainer.x <= getGameWidth(this) * 0.1 && !this.mGoodCheckState) {
                 this.setWrongResult();
             }
         }, 5)
@@ -302,7 +353,7 @@ export class GameScene extends Scene {
     }
 
     private setWrongResult() {
-        this.initNewGood();
+        this.mGoodCheckState = true;
         if (this.mCurrentGameState == GameStateArray.PlayTest) {  // false
             this.mCurrentGameState = GameStateArray.Inittest;
             this.stopPlayingGame();
@@ -311,50 +362,106 @@ export class GameScene extends Scene {
             // show the sign result
             var str = "";
             if (this.mCurrentGameValue <= MatchValue.Pie) {
-                str = "The " + getGoodFrameName(this.mCurrentGameValue) + " are currently not on sale, you should not have bought them.";
+                str = "The " + getGoodFrameName(this.mCurrentGoodNumber) + " are currently not on sale, you should not have bought them.";
             } else {
                 str = getGoodFrameName(this.mCurrentGameValue) + " packaging is currently on sale, you should have bought the product.";
             }
             this.setSignText(str);
+            this.resultHideGood("false", this.initNewOnlyGood);
         }
         else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
             this.setSignText("DISCOUNT");
+            this.resultHideGood("false", this.initNewGood);
         }
-
-
     }
     private setTrueResult() {
-        this.initNewGood();
+        this.mGoodCheckState = true;
         if (this.mCurrentGameState == GameStateArray.PlayTest) {
+            // show the sign result
+            this.setSignText("Well done!");
             this.mTestGameScore++;
             if (this.mTestGameScore == 5) {
                 this.mCurrentGameState = GameStateArray.FinishTest;
-                this.finishTest();
+                this.resultHideGood("true", this.finishTest);
             }
-
-            // show the sign result
-            this.setSignText("Well done!");
+            else {
+                this.resultHideGood("true", this.initNewGood);
+            }
         }
         else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
+            this.mTotalHitCount++;
+            this.actorContainer.increaseActorSpeed(this.mTotalHitCount);
             this.mGameScore += (this.actorContainer.getActorSpeed() - 1) / 0.2 * 2 + 6;
             this.signContainer.setScoreValue(this.mGameScore);
-            this.actorContainer.increaseActorSpeed();
+            this.resultHideGood("true", this.initNewGood);
         }
     }
 
-    private initNewGood() {
-        this.mGoodContainer.setX(getGameWidth(this) * 1.1);
-        this.mCurrentGameValue = getRandomInt(11);   // sign number
-        this.mCurrentGoodNumber = getRandomInt(6);   // good number (orange...)
-        this.mCurrentTypeNumber = getRandomInt(5) + 6;   // good type number  (circle ...)
-        this.setSignImage(this.mCurrentGameValue);
-        this.makeGoodFrame(this.mCurrentGoodNumber, this.mCurrentTypeNumber);
+    private initNewGood(context?: any) {
+        if (!context) {
+            context = this;
+        }
+        context.initnewGameValue(context);
+        context.initNewOnlyGood(context);
+    }
+    private initnewGameValue(context?: any) {
+        if (!context) {
+            context = this;
+        }
+        this.sound.stopAll();
+        this.sound.play('bell');
+        context.mCurrentGameValue = getRandomInt(11);   // sign number
+        context.setSignImage(context.mCurrentGameValue);
     }
 
-    private finishTest() {
-        this.setSignText("Shopshift improves: flexibility, task switching and concentration.");
-        clearInterval(this.GoodsInterval);
-        this.showStartButton();
+    private initNewOnlyGood(context?: any) {
+        if (!context) {
+            context = this;
+        }
+        context.mGoodCheckState = false;
+        context.mGoodContainer.setX(getGameWidth(context) * 1.1);
+        context.resultGoodSprite.setVisible(false);
+        context.mGoodContainer.setAlpha(1);
+        context.mCurrentGoodNumber = getRandomInt(6);   // good number (orange...)
+        context.mCurrentTypeNumber = getRandomInt(5) + 6;   // good type number  (circle ...)
+        context.makeGoodFrame(context.mCurrentGoodNumber, context.mCurrentTypeNumber);
+    }
+
+
+    private resultHideGood(result: string, func: any) {
+        if (result == "true") {
+            this.resultGoodSprite.setVisible(true);
+            this.resultGoodSprite.setFrame("hudTick");
+            this.sound.stopAll();
+            this.sound.play("sndSuccess");
+        } else if (result == "false") {
+            this.resultGoodSprite.setVisible(true);
+            this.resultGoodSprite.setFrame("hudCross");
+            this.sound.stopAll();
+            this.sound.play("sndWrong");
+        }
+
+        const hideTween = this.tweens.add({
+            targets: this.mGoodContainer,
+            alpha: 0,
+            duration: 500,
+            ease: 'Linear'
+        });
+
+        hideTween.on("complete", () => {
+            func(this);
+        }, this);
+    }
+
+    private finishTest(context?: any) {
+        if (!context) {
+            context = this;
+        }
+        context.mGoodCheckState = false;
+        context.setSignText("Shopshift improves: flexibility, task switching and concentration.");
+        clearInterval(context.GoodsInterval);
+        // prepare start game
+        context.prepareStartGame();
     }
 
     private startRealGame() {

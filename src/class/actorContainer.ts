@@ -19,7 +19,7 @@ export class ActorContainer extends Phaser.GameObjects.Container {
     }
 
     private initActorSprite() {
-        this.actorSprite = this.scene.add.sprite(0, 0, Actor_Sprite_Key, "pause").setOrigin(1, 1);
+        this.actorSprite = this.scene.add.sprite(0, 0, Actor_Sprite_Key, "pause.png").setOrigin(1, 1);
         this.bucketSprite = this.scene.add.sprite(0, 0, Game_Sprite_Key, "bucket").setOrigin(0, 1);
         this.add(this.actorSprite);
         this.add(this.bucketSprite);
@@ -54,7 +54,7 @@ export class ActorContainer extends Phaser.GameObjects.Container {
 
     public stopAnimation() {
         this.actorSprite.stop();
-        this.actorSprite.setFrame("pause");
+        this.actorSprite.setFrame("pause.png");
     }
 
     public getActorState() {
@@ -94,9 +94,11 @@ export class ActorContainer extends Phaser.GameObjects.Container {
         return this.actorSpeed;
     }
 
-    public increaseActorSpeed() {
+    public increaseActorSpeed(count: number) {
+        
         this.setActorState();
-        this.actorSpeed += 0.2;
+        this.actorSpeed = 1 + (Math.round(count/6) - 1) * 0.3;
+        console.log(this.actorSpeed);
         return this.actorSpeed;
     }
 
