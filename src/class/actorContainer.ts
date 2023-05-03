@@ -34,19 +34,19 @@ export class ActorContainer extends Phaser.GameObjects.Container {
 
     public playAnimation(key: string) {
         this.actorSprite.play(key);
-        if(key == "walk") {
+        if (key == "walk") {
             this.actorSprite.setX(this.actorSprite.width * 0.15);
             this.actorSprite.setY(0);
         }
-        else if(key == "run") {
+        else if (key == "run") {
             this.actorSprite.setX(this.actorSprite.width * 0.4);
             this.actorSprite.setY(0);
         }
-        else if(key == "ride") {
+        else if (key == "ride") {
             this.actorSprite.setX(this.actorSprite.width * 0.55);
             this.actorSprite.setY(-this.actorSprite.height * 0.2);
         }
-        else if(key == "fly") {
+        else if (key == "fly") {
             this.actorSprite.setX(this.actorSprite.width * 0.15);
             this.actorSprite.setY(-this.actorSprite.height * 0.75);
         }
@@ -62,17 +62,17 @@ export class ActorContainer extends Phaser.GameObjects.Container {
     }
 
     public setActorState() {
-        if(this.actorSpeed < 1.5) {
+        if (this.actorSpeed < 1.5) {
             // walk
             this.actorState = ActorState.WALK;
             this.playAnimation("walk");
         }
-        else if(this.actorSpeed < 2.5) {
+        else if (this.actorSpeed < 2.5) {
             // run
             this.actorState = ActorState.RUN;
             this.playAnimation("run");
         }
-        else if(this.actorSpeed < 4) {
+        else if (this.actorSpeed < 4) {
             // ride
             this.actorState = ActorState.RIDE;
             this.playAnimation("ride");
@@ -95,14 +95,14 @@ export class ActorContainer extends Phaser.GameObjects.Container {
     }
 
     public increaseActorSpeed(count: number) {
-        
-        if(count <= 3) {
+
+        if (count <= 3) {
             this.actorSpeed = 1;
         }
-        else if(count <= 6) {
+        else if (count <= 6) {
             this.actorSpeed = 1.3;
         }
-        else if(count <= 10) {
+        else if (count <= 10) {
             this.actorSpeed = 1.7;
         }
         else {
@@ -113,10 +113,10 @@ export class ActorContainer extends Phaser.GameObjects.Container {
     }
 
     public getCurrentScoreHint(count: number) {
-        if(count <= 6) {
+        if (count <= 6) {
             return 6;
         }
-        else if(count <= 10) {
+        else if (count <= 10) {
             return 10;
         }
         else {
@@ -124,11 +124,15 @@ export class ActorContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public decreaseActorSpeed() {
-        this.actorSpeed -= 0.2;
-        if (this.actorSpeed < 1) return 1;
-        this.setActorState();
-        return this.actorSpeed;
+    public decreaseTotalScore(count: number) {
+        if (count <= 10)
+            return 6;
+        else
+            count = count - 4;
+
+        if (count < 6)
+            return 6;
+        return count;
     }
 
 

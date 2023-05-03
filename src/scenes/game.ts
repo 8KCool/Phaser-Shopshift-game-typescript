@@ -23,8 +23,7 @@ export class GameScene extends Scene {
     private mLoadingBackBar!: Phaser.GameObjects.Rectangle;
     private mLoadingBar!: Phaser.GameObjects.Rectangle;
 
-    private goodAnimTween!: Phaser.Tweens.Tween;
-
+    private resultShowPanel!: Phaser.GameObjects.Text;
 
     // button
     private continueButton!: Phaser.GameObjects.Text;
@@ -129,7 +128,7 @@ export class GameScene extends Scene {
 
         this.mLoadingContainer = this.add.container(0, getGameHeight(this) - 8);
         this.mLoadingBackBar = this.add.rectangle(getGameWidth(this) / 2, 0, getGameWidth(this), 16, 0x4b4a4a).setOrigin(.5, .5);
-        this.mLoadingBar = this.add.rectangle(6, 0 , getGameWidth(this) - 12, 8, 0xff981d).setOrigin(0, .5);
+        this.mLoadingBar = this.add.rectangle(6, 0, getGameWidth(this) - 12, 8, 0xff981d).setOrigin(0, .5);
         this.mLoadingContainer.add(this.mLoadingBackBar);
         this.mLoadingContainer.add(this.mLoadingBar);
         this.mLoadingContainer.setVisible(false);
@@ -143,8 +142,9 @@ export class GameScene extends Scene {
             .setInteractive({ useHandCursor: true })
             .setVisible(false)
             .on('pointerdown', this.testGame, this)
-            .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
-            .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+            .on('pointerup', () => this.continueButton.setStyle({ fill: '#FFF', backgroundColor: '#43b749' }))
+            .on('pointerover', () => this.continueButton.setStyle({backgroundColor: '#57c15d' }))
+            .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF', backgroundColor: '#43b749' }));
 
 
         this.notbuyButton = this.add.text(getGameWidth(this) * 0.4, getGameHeight(this) * 0.9, "Don't Buy")
@@ -155,8 +155,9 @@ export class GameScene extends Scene {
             .setInteractive({ useHandCursor: true })
             .setVisible(false)
             .on('pointerdown', this.checkGameValueFalse, this)
-            .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
-            .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+            .on('pointerup', () => this.notbuyButton.setStyle({ fill: '#FFF', backgroundColor: '#d54040' }))
+            .on('pointerover', () => this.notbuyButton.setStyle({backgroundColor: '#da5858' }))
+            .on('pointerout', () => this.notbuyButton.setStyle({ fill: '#FFF', backgroundColor: '#d54040' }));
 
 
         this.buyButton = this.add.text(getGameWidth(this) * 0.6, getGameHeight(this) * 0.9, 'Buy')
@@ -167,8 +168,9 @@ export class GameScene extends Scene {
             .setInteractive({ useHandCursor: true })
             .setVisible(false)
             .on('pointerdown', this.checkGameValueTrue, this)
-            .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
-            .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+            .on('pointerup', () => this.buyButton.setStyle({ fill: '#FFF', backgroundColor: '#43b749' }))
+            .on('pointerover', () => this.buyButton.setStyle({backgroundColor: '#57c15d' }))
+            .on('pointerout', () => this.buyButton.setStyle({ fill: '#FFF', backgroundColor: '#43b749' }));
 
         this.startButton = this.add.text(getGameWidth(this) / 2, getGameHeight(this) * 0.9, 'Start Game')
             .setOrigin(0.5)
@@ -180,6 +182,14 @@ export class GameScene extends Scene {
             .on('pointerdown', this.startRealGame, this)
             .on('pointerover', () => this.continueButton.setStyle({ fill: '#CCC' }))
             .on('pointerout', () => this.continueButton.setStyle({ fill: '#FFF' }));
+
+
+        this.resultShowPanel = this.add.text(getGameWidth(this) / 2, getGameHeight(this) / 2, 'Game Over')
+            .setOrigin(0.5)
+            .setFontSize(100)
+            .setFontStyle("bold")
+            .setColor("#000000")
+            .setVisible(false);
     }
 
     private showBtnPlayGroup(flag: boolean) {
@@ -301,6 +311,7 @@ export class GameScene extends Scene {
     }
 
     private testGame() {
+        this.continueButton.setStyle({ backgroundColor: '#3ea843' });
         if (this.mTestGamePoint < TestGameString.length && (this.mCurrentGameState == GameStateArray.FinishLoading || this.mCurrentGameState == GameStateArray.Inittest)) {
             this.mCurrentGameState = GameStateArray.Inittest;
             let signStr = TestGameString[this.mTestGamePoint];
@@ -341,7 +352,52 @@ export class GameScene extends Scene {
         this.actorContainer.stopAnimation();
     }
 
+    private finishGame() {
+        this.mCurrentGameState = GameStateArray.FinishGame;
+        clearInterval(this.GoodsInterval);
+        clearInterval(this.BackInterval);
+        this.clearGameBoard();
+
+        const endActorTween = this.tweens.add({
+            targets: this.actorContainer,
+            x: getGameWidth(this) + 100,
+            duration: 1500,
+            ease: 'Linear'
+        });
+        endActorTween.on("complete", () => {
+            this.actorContainer.destroy();
+        }, this);
+
+
+        this.resultShowPanel.setVisible(true);
+        const endTextTween = this.tweens.add({
+            targets: this.resultShowPanel,
+            alpha: 0,
+            duration: 1000,
+            delay: 2000,
+            ease: 'Linear'
+        });
+        endTextTween.on("complete", () => {
+            this.resultShowPanel.destroy();
+        }, this);
+    }
+
+    private clearGameBoard() {
+        this.goodSprite.destroy()
+        this.typeSprite.destroy()
+        this.resultGoodSprite.destroy()
+        this.mGoodContainer.destroy()
+        this.mLoadingContainer.destroy()
+        this.mLoadingBackBar.destroy()
+        this.mLoadingBar.destroy()
+        this.continueButton.destroy()
+        this.buyButton.destroy()
+        this.notbuyButton.destroy()
+        this.startButton.destroy()
+    }
+
     private checkGameValueTrue() {
+        this.buyButton.setStyle({ backgroundColor: '#3ea843' });
         var result = this.checkCurrentState();
         if (result == true) {
             // okay
@@ -353,6 +409,7 @@ export class GameScene extends Scene {
     }
 
     private checkGameValueFalse() {
+        this.notbuyButton.setStyle({ backgroundColor: '#d12e2e' });
         var result = this.checkCurrentState();
         if (result == true) {
             // false
@@ -390,6 +447,8 @@ export class GameScene extends Scene {
         }
         else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
             this.resultHideGood("false", this.initNewGood);
+            this.mTotalHitCount = this.actorContainer.decreaseTotalScore(this.mTotalHitCount);
+            this.actorContainer.increaseActorSpeed(this.mTotalHitCount);
         }
     }
     private setTrueResult() {
@@ -419,8 +478,8 @@ export class GameScene extends Scene {
         if (!context) {
             context = this;
         }
-        context.initnewGameValue(context);
         context.initNewOnlyGood(context);
+        context.initnewGameValue(context);
     }
     private initnewGameValue(context?: any) {
         if (!context) {
@@ -428,7 +487,14 @@ export class GameScene extends Scene {
         }
         this.sound.stopAll();
         this.sound.play('bell');
-        context.mCurrentGameValue = getRandomInt(11);   // sign number
+        var random = getRandomInt(5);
+        if (random == 1) {
+            context.mCurrentGameValue = context.mCurrentTypeNumber
+        } else if (random == 2) {
+            context.mCurrentGameValue = context.mCurrentGoodNumber
+        } else
+            context.mCurrentGameValue = getRandomInt(11);   // sign number
+
         context.setSignImage(context.mCurrentGameValue);
     }
 
@@ -498,14 +564,14 @@ export class GameScene extends Scene {
         const gameTimer = _scene.tweens.add({
             targets: _scene.mLoadingBar,
             scaleX: 1,
-            onStart:() => {
+            onStart: () => {
                 _scene.mLoadingBar.scaleX = 0
             },
             duration: 1000 * this.mGameTime,
             ease: 'Linear'
         });
         gameTimer.on("complete", () => {
-           
+            _scene.finishGame();
         }, this);
     }
 }
