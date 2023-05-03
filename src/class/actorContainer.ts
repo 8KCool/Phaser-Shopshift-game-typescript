@@ -62,12 +62,12 @@ export class ActorContainer extends Phaser.GameObjects.Container {
     }
 
     public setActorState() {
-        if(this.actorSpeed < 2) {
+        if(this.actorSpeed < 1.5) {
             // walk
             this.actorState = ActorState.WALK;
             this.playAnimation("walk");
         }
-        else if(this.actorSpeed < 3) {
+        else if(this.actorSpeed < 2.5) {
             // run
             this.actorState = ActorState.RUN;
             this.playAnimation("run");
@@ -96,10 +96,32 @@ export class ActorContainer extends Phaser.GameObjects.Container {
 
     public increaseActorSpeed(count: number) {
         
+        if(count <= 3) {
+            this.actorSpeed = 1;
+        }
+        else if(count <= 6) {
+            this.actorSpeed = 1.3;
+        }
+        else if(count <= 10) {
+            this.actorSpeed = 1.7;
+        }
+        else {
+            this.actorSpeed = 1.7 + Math.ceil((count - 10) / 5) * 0.3;
+        }
         this.setActorState();
-        this.actorSpeed = 1 + (Math.round(count/6) - 1) * 0.3;
-        console.log(this.actorSpeed);
         return this.actorSpeed;
+    }
+
+    public getCurrentScoreHint(count: number) {
+        if(count <= 6) {
+            return 6;
+        }
+        else if(count <= 10) {
+            return 10;
+        }
+        else {
+            return 10 + Math.round((this.actorSpeed - 1.7) / 0.3 * 4);
+        }
     }
 
     public decreaseActorSpeed() {

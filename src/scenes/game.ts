@@ -7,6 +7,8 @@ import { Actor_Sprite_Key, Game_Sprite_Key, TestGameString, GameStateArray, Test
 
 export class GameScene extends Scene {
 
+    private mGameTime = 100; // second
+
     private gameTitle!: Phaser.GameObjects.Text;
     private shopBg!: Phaser.GameObjects.TileSprite;
     private floorBg!: Phaser.GameObjects.TileSprite;
@@ -17,6 +19,9 @@ export class GameScene extends Scene {
     private typeSprite!: Phaser.GameObjects.Sprite;
     private resultGoodSprite!: Phaser.GameObjects.Sprite;
     private mGoodContainer!: Phaser.GameObjects.Container;
+    private mLoadingContainer!: Phaser.GameObjects.Container;
+    private mLoadingBackBar!: Phaser.GameObjects.Rectangle;
+    private mLoadingBar!: Phaser.GameObjects.Rectangle;
 
     private goodAnimTween!: Phaser.Tweens.Tween;
 
@@ -113,14 +118,21 @@ export class GameScene extends Scene {
         gameContainer.add(this.shopBg);
         gameContainer.add(this.floorBg);
 
-        this.typeSprite = this.add.sprite(0, 5, Game_Sprite_Key, "circle").setScale(1.4);
-        this.goodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "orange").setScale(0.9);
+        this.typeSprite = this.add.sprite(0, 0, Game_Sprite_Key, "circle").setScale(1.7);
+        this.goodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "orange").setScale(1.1);
         this.resultGoodSprite = this.add.sprite(0, 0, Game_Sprite_Key, "hudTick").setVisible(false).setScale(0.5);
 
-        this.mGoodContainer = this.add.container(getGameWidth(this) * 1.1, getGameHeight(this) / 2);
+        this.mGoodContainer = this.add.container(getGameWidth(this) * 1.1, getGameHeight(this) * 0.42);
         this.mGoodContainer.add(this.typeSprite);
         this.mGoodContainer.add(this.goodSprite);
         this.mGoodContainer.add(this.resultGoodSprite);
+
+        this.mLoadingContainer = this.add.container(0, getGameHeight(this) - 8);
+        this.mLoadingBackBar = this.add.rectangle(getGameWidth(this) / 2, 0, getGameWidth(this), 16, 0x4b4a4a).setOrigin(.5, .5);
+        this.mLoadingBar = this.add.rectangle(6, 0 , getGameWidth(this) - 12, 8, 0xff981d).setOrigin(0, .5);
+        this.mLoadingContainer.add(this.mLoadingBackBar);
+        this.mLoadingContainer.add(this.mLoadingBar);
+        this.mLoadingContainer.setVisible(false);
 
 
         this.continueButton = this.add.text(getGameWidth(this) / 2, getGameHeight(this) * 0.9, 'Continue')
@@ -203,7 +215,19 @@ export class GameScene extends Scene {
                 || this.mCurrentGameState == GameStateArray.PlayingGame) {
                 this.shopBg.tilePositionX += 2 * this.actorContainer.getActorSpeed();
                 this.floorBg.tilePositionX += 2 * this.actorContainer.getActorSpeed();
-                console.log(this.actorContainer.getActorSpeed());
+            }
+        }, 5)
+    }
+
+    private makeGoodAnimation() {
+        clearInterval(this.GoodsInterval);
+
+        var limitPost = getGameWidth(this) * 0.1;
+        this.GoodsInterval = setInterval(() => {
+            // this.mGoodContainer.setX(this.mGoodContainer.x - 2 * this.actorContainer.getActorSpeed());
+            this.mGoodContainer.x -= 2 * this.actorContainer.getActorSpeed();
+            if (this.mGoodContainer.x <= limitPost && !this.mGoodCheckState) {
+                this.setWrongResult();
             }
         }, 5)
     }
@@ -214,6 +238,10 @@ export class GameScene extends Scene {
 
     private setSignImage(index: number) {
         this.signContainer.setSignImage(index);
+    }
+
+    private setSignAnimText(title: string, size: number) {
+        this.signContainer.setSignAnimText(title, size);
     }
 
     private prepareGame() {
@@ -292,28 +320,19 @@ export class GameScene extends Scene {
      * the single game logic
     */
     private startTestGame() {
-        this.startBgAnimation();
         this.showBtnPlayGroup(true);
         this.setSignText("Try it now.");
+        this.setSignAnimText("", 30);
         this.actorContainer.playAnimation("walk");
 
         this.initNewGood();
+        this.startBgAnimation();
         this.makeGoodAnimation();
     }
 
     private makeGoodFrame(goodNumber: number, typeNumber: number) {
         this.goodSprite.setFrame(getGoodFrameName(goodNumber));
         this.typeSprite.setFrame(getGoodFrameName(typeNumber));
-    }
-
-    private makeGoodAnimation() {
-        clearInterval(this.GoodsInterval)
-        this.GoodsInterval = setInterval(() => {
-            this.mGoodContainer.setX(this.mGoodContainer.x - 2 * this.actorContainer.getActorSpeed());
-            if (this.mGoodContainer.x <= getGameWidth(this) * 0.1 && !this.mGoodCheckState) {
-                this.setWrongResult();
-            }
-        }, 5)
     }
 
     private stopPlayingGame() {
@@ -370,7 +389,6 @@ export class GameScene extends Scene {
             this.resultHideGood("false", this.initNewOnlyGood);
         }
         else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
-            this.setSignText("DISCOUNT");
             this.resultHideGood("false", this.initNewGood);
         }
     }
@@ -391,7 +409,7 @@ export class GameScene extends Scene {
         else if (this.mCurrentGameState == GameStateArray.PlayingGame) {
             this.mTotalHitCount++;
             this.actorContainer.increaseActorSpeed(this.mTotalHitCount);
-            this.mGameScore += (this.actorContainer.getActorSpeed() - 1) / 0.2 * 2 + 6;
+            this.mGameScore += this.actorContainer.getCurrentScoreHint(this.mTotalHitCount);
             this.signContainer.setScoreValue(this.mGameScore);
             this.resultHideGood("true", this.initNewGood);
         }
@@ -444,7 +462,7 @@ export class GameScene extends Scene {
         const hideTween = this.tweens.add({
             targets: this.mGoodContainer,
             alpha: 0,
-            duration: 500,
+            duration: 800,
             ease: 'Linear'
         });
 
@@ -466,11 +484,28 @@ export class GameScene extends Scene {
 
     private startRealGame() {
         this.setSignText("Have fun!");
+        this.setSignAnimText("DISCOUNT", 70);
+
         this.mCurrentGameState = GameStateArray.PlayingGame;
-        this.startBgAnimation();
         this.showBtnPlayGroup(true);
         this.actorContainer.playAnimation("walk");
         this.initNewGood();
+        this.startBgAnimation();
         this.makeGoodAnimation();
+
+        let _scene = this;
+        this.mLoadingContainer.setVisible(true);
+        const gameTimer = _scene.tweens.add({
+            targets: _scene.mLoadingBar,
+            scaleX: 1,
+            onStart:() => {
+                _scene.mLoadingBar.scaleX = 0
+            },
+            duration: 1000 * this.mGameTime,
+            ease: 'Linear'
+        });
+        gameTimer.on("complete", () => {
+           
+        }, this);
     }
 }

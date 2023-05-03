@@ -41,7 +41,7 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
 
         
         this.signImage = this.scene.add.sprite(getGameWidth(this.scene) * 0.65, this.wallBg.height *0.5, Game_Sprite_Key, "orange")
-            .setOrigin(.5, .5).setVisible(false);
+            .setOrigin(.5, .5).setVisible(false).setScale(0.9);
         this.add(signBg);
         this.add(this.signTitle);
         this.add(this.signImage);
@@ -67,6 +67,20 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
         this.signTitle.setText(text);
     }
 
+    public setSignAnimText(title: string , size: number) {
+        const textTween = this.scene.tweens.add({
+            targets: this.signTitle,
+            alpha: 0,
+            duration: 2000,
+            ease: 'sine.in'
+        });
+        textTween.on("complete", () => {
+            this.signTitle.setAlpha(1);
+            this.signTitle.setFontSize(size);
+            this.signTitle.setText(title);
+        }, this);
+    }
+
     public setSignImage(index: number) {
         // "Banana", "Egg", "Bread", "Juice", "Orange", "Pie", "Sqare", "Circle", "Pentagon", "Hexagon", "BHexagon"
         let signTextture = "";
@@ -85,6 +99,14 @@ export class InfoBoardContainer extends Phaser.GameObjects.Container {
         }
         this.signImage.setFrame(signTextture);
         this.signImage.setVisible(true);
+
+        const hideTween = this.scene.tweens.add({
+            targets: this.signImage,
+            scale: 1.2,
+            duration: 200,
+            ease: 'sine.inout',
+            yoyo: true
+        });
     }
 
     public setScoreValue(value: number) {
